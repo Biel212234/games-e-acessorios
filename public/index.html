@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Games e Acessórios</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Game Verse</h1>
+
+  <h2>Jogos</h2>
+  <ul id="games-list" class="item-list"></ul>
+
+  <h2>Acessórios</h2>
+  <ul id="acessorios-list" class="item-list"></ul>
+
+  <script>
+    function createListItem(texto, nomeOriginal, tipo) {
+      const li = document.createElement('li');
+      li.className = 'list-item';
+  
+      const span = document.createElement('span');
+      span.textContent = texto;
+      li.appendChild(span);
+  
+      const buttons = document.createElement('div');
+      buttons.className = 'buttons';
+  
+      const editBtn = document.createElement('button');
+      editBtn.textContent = 'Editar';
+      editBtn.className = 'btn edit';
+  
+      const deleteBtn = document.createElement('button');
+      deleteBtn.textContent = 'Excluir';
+      deleteBtn.className = 'btn delete';
+      deleteBtn.onclick = () => {
+        if (confirm(`Deseja excluir: ${nomeOriginal}?`)) {
+          li.remove();
+        }
+      };
+  
+      editBtn.onclick = () => {
+        // Se estiver editando, salvar
+        if (editBtn.textContent === 'Salvar') {
+          const inputs = li.querySelectorAll('input');
+          const nome = inputs[0].value;
+          const info = inputs[1].value;
+          const preco = inputs[2].value;
+  
+          span.textContent = tipo === 'game'
+            ? `${nome} (${info}) - R$ ${preco}`
+            : `${nome} (${info}) - R$ ${preco}`;
+  
+          editBtn.textContent = 'Editar';
+          span.style.display = '';
+          inputs.forEach(input => input.remove());
+        } else {
+          // Iniciar edição
+          const parts = span.textContent.match(/^(.*?) \((.*?)\) - R\$ (.*)$/);
+          const [_, nome, info, preco] = parts;
+  
+          span.style.display = 'none';
+  
+          const nomeInput = document.createElement('input');
+          nomeInput.value = nome;
+  
+          const infoInput = document.createElement('input');
+          infoInput.value = info;
+  
+          const precoInput = document.createElement('input');
+          precoInput.value = preco;
+  
+          li.insertBefore(nomeInput, buttons);
+          li.insertBefore(infoInput, buttons);
+          li.insertBefore(precoInput, buttons);
+  
+          editBtn.textContent = 'Salvar';
+        }
+      };
+  
+      buttons.appendChild(editBtn);
+      buttons.appendChild(deleteBtn);
+      li.appendChild(buttons);
+  
+      return li;
+    }
+  
+    fetch('/games')
+      .then(res => res.json())
+      .then(data => {
+        const ul = document.getElementById('games-list');
+        data.forEach(game => {
+          const texto = `${game.nome} (${game.plataforma}) - R$ ${game.preco}`;
+          ul.appendChild(createListItem(texto, game.nome, 'game'));
+        });
+      });
+  
+    fetch('/acessorios')
+      .then(res => res.json())
+      .then(data => {
+        const ul = document.getElementById('acessorios-list');
+        data.forEach(acc => {
+          const texto = `${acc.nome} (${acc.tipo}) - R$ ${acc.preco}`;
+          ul.appendChild(createListItem(texto, acc.nome, 'acessorio'));
+        });
+      });
+  </script>
+  
+</body>
+</html>

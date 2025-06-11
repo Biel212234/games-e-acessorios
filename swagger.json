@@ -1,0 +1,76 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Game Verse",
+    "version": "1.0.0"
+  },
+  "basePath": "/",
+  "paths": {
+    "/games": {
+      "get": {
+        "summary": "Lista todos os jogos",
+        "responses": {
+          "200": {
+            "description": "Sucesso"
+          }
+        }
+      },
+      "post": {
+        "summary": "Adiciona um novo jogo",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "nome": { "type": "string" },
+                "plataforma": { "type": "string" },
+                "preco": { "type": "number" }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Criado com sucesso"
+          }
+        }
+      }
+    },
+    "/acessorios": {
+      "get": {
+        "summary": "Lista todos os acessórios",
+        "responses": {
+          "200": {
+            "description": "Sucesso"
+          }
+        }
+      },
+      "post": {
+        "summary": "Adiciona um novo acessório",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "nome": { "type": "string" },
+                "tipo": { "type": "string" },
+                "preco": { "type": "number" }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Criado com sucesso"
+          }
+        }
+      }
+    }
+  }
+}
